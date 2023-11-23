@@ -1,4 +1,4 @@
-# Nome do Seu Projeto
+# API-usuarios-Express
 
 O projeto API-usuarios-Express é uma aplicação web construída com Node.js e Express, que oferece serviços de autenticação e gerenciamento de usuários usando um banco de dados MongoDB. Esta aplicação fornece endpoints para cadastro de usuários, autenticação (login), e consulta de informações do usuário autenticado.
 
