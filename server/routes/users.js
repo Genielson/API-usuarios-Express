@@ -76,3 +76,78 @@ router.post('/signup', csrfCheck, async (req, res) => {
     });
   }
 });
+
+
+router.post('/signin', csrfCheck,async (req, res) => {
+    try {
+      const { email, senha } = req.body;
+      if (!isEmail(email)) {
+        return res.status(400).json({
+          errors: [
+            {
+              mensagem: 'O email deve ser um email válido! ',
+            },
+          ],
+        });
+      }
+      if (typeof senha !== 'string') {
+        return res.status(400).json({
+          errors: [
+            {
+              mensagem: 'A senha deve ser uma string ',
+            },
+          ],
+        });
+      }
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(400).json({
+          errors: [
+            {
+              mensagem: 'Usuário e/ou senha inválidos',
+            },
+          ],
+        });
+      }
+      const userId = user._id;
+  
+      const passwordValidated = await bcrypt.compare(senha, user.senha);
+      if (!passwordValidated) {
+        return res.status(401).json({
+          errors: [
+            {
+              mensagem: 'Usuário e/ou senha inválidos',
+            },
+          ],
+        });
+      }
+  
+      user.ultimo_login = new Date();
+      await user.save();
+  
+      const session = await initSession(userId);
+  
+      res
+        .cookie('token', session.token, {
+          httpOnly: true,
+          sameSite: true,
+          maxAge: 1800000,
+          secure: process.env.NODE_ENV === 'production',
+        })
+        .json({
+          id:user.id,
+          data_criacao: currentUser.data_criacao,
+          data_atualizacao: currentUser.data_atualizacao,
+          ultimo_login: currentUser.ultimo_login,
+          csrfToken: session.csrfToken,
+        });
+    } catch (err) {
+      res.status(401).json({
+        errors: [
+          {
+            mensagem: 'Credenciais inválidas! Verifique o email e a senha. ',
+          },
+        ],
+      });
+    }
+  });
