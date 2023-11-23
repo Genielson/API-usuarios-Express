@@ -151,3 +151,51 @@ router.post('/signin', csrfCheck,async (req, res) => {
       });
     }
   });
+
+
+router.post('/find', authenticate,csrfCheck, async (req, res) => {
+    try {
+      const { email } = req.body;
+  
+      if (!isEmail(email)) {
+        return res.status(400).json({
+          errors: [
+            {
+              mensagem: 'O email deve ser válido! ',
+            },
+          ],
+        });
+      }
+  
+      const user = await User.findOne({ email });
+  
+      if (!user) {
+        return res.status(400).json({
+          errors: [
+            {
+              mensagem: 'Usuário não encontrado! ',
+            },
+          ],
+        });
+      }
+  
+      res.status(200).json({
+        id: user.id,
+        nome: user.nome,
+        email: user.email,
+        data_criacao: user.data_criacao,
+        data_atualizacao: user.data_atualizacao,
+        ultimo_login: user.ultimo_login,
+      });
+    } catch (err) {
+      res.status(400).json({
+        errors: [
+          {
+            mensagem: 'Algo de errado aconteceu durante o processo de busca. ',
+          },
+        ],
+      });
+    }
+  });
+  module.exports = router;
+  
