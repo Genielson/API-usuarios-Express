@@ -27,7 +27,7 @@ Antes de começar, certifique-se de ter o Node.js e o npm instalados em sua máq
 ## Configuração 
 
 1. Abra o arquivo secrets.js e substitua a string "SUA API KEY" pela key do MONGODB
-   Exemplo : mongodb+srv://<seu-usuario>:<sua-senha>@cluster0.1myuxcb.mongodb.net/<seu-banco-de-dados>?retryWrites=true&w=majority
+   Exemplo : mongodb+srv://usuario-teste:minha-senha-teste@cluster0.1myuxcb.mongodb.net/banco-teste?retryWrites=true&w=majority
 
 ## Execução 
 
